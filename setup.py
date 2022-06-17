@@ -70,6 +70,8 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         'click',
+        'torch==1.11.0',
+        'numpy==1.22.4'
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
     ],
     extras_require={
