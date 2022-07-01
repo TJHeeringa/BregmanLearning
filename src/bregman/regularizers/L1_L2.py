@@ -1,19 +1,44 @@
 import torch
+import math
 
 
 class L1_L2:
-    def __init__(self, lamda=1.0):
-        self.lamda = lamda
+    r"""This regularizer computes
+
+    .. math::
+        ||\theta||_{\ell^{1,2}} = \sum_{i}\sqrt{\sum_{j}|\theta_{ij}|^2}
+
+    or
+
+    .. math::
+        ||\theta||_{\ell^{1,2}} = \sum_{j}\sqrt{\sum_{i}|\theta_{ij}|^2}
+
+    where $i$ sums over the columns and $j$ over the rows, when the given direction parameter is row or column respectively.
+
+    The associated proximal map is
+
+    .. math::
+
+    It is used to produce row-sparse or column-sparse matrices.
+    """
+
+    def __init__(self, rc=1.0, direction="row"):
+        assert direction in ["row", "column"]
+        if direction == "row":
+            self.dim = 1
+        else:
+            self.dim = 0
+        self.rc = rc
 
     def __call__(self, x):
-        return self.lamda * torch.sqrt(x.shape[-1]) * torch.norm(torch.norm(x, p=2, dim=1), p=1).item()
+        return self.rc * math.sqrt(x.shape[-1]) * torch.norm(torch.norm(x, p=2, dim=self.dim), p=1).item()
 
     def prox(self, x, delta=1.0):
-        thresh = delta * self.lamda
-        thresh *= torch.sqrt(x.shape[-1])
+        thresh = delta * self.rc
+        thresh *= math.sqrt(x.shape[-1])
 
         ret = torch.clone(x)
-        nx = torch.norm(x, p=2, dim=1).view(x.shape[0], 1)
+        nx = torch.norm(x, p=2, dim=self.dim).view(x.shape[0], 1)
 
         ind = torch.where((nx != 0))[0]
 
@@ -21,9 +46,9 @@ class L1_L2:
         return ret
 
     def sub_grad(self, x):
-        thresh = self.lamda * torch.sqrt(x.shape[-1])
+        thresh = self.rc * math.sqrt(x.shape[-1])
         #
-        nx = torch.norm(x, p=2, dim=1).view(x.shape[0], 1)
+        nx = torch.norm(x, p=2, dim=self.dim).view(x.shape[0], 1)
         ind = torch.where((nx != 0))[0]
         ret = torch.clone(x)
         ret[ind] = x[ind] / nx[ind]

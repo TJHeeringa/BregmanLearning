@@ -40,8 +40,8 @@ class AdaBreg(torch.optim.Optimizer):
                     # get prox
                     # initialize subgradients
                     state["sub_grad"] = self.initialize_sub_grad(p, reg, delta)
-                    state["exp_avg"] = torch.zeros_like(state["sub_grad"])
-                    state["exp_avg_sq"] = torch.zeros_like(state["sub_grad"])
+                    state["first_moment_estimate"] = torch.zeros_like(state["sub_grad"])
+                    state["second_moment_estimate"] = torch.zeros_like(state["sub_grad"])
                 # -------------------------------------------------------------
                 # update scheme
                 # -------------------------------------------------------------
@@ -50,25 +50,25 @@ class AdaBreg(torch.optim.Optimizer):
                 step = state["step"]
                 # get the current sub gradient and averages
                 sub_grad = state["sub_grad"]
-                exp_avg = state["exp_avg"]
-                exp_avg_sq = state["exp_avg_sq"]
+                first_moment_estimate = state["first_moment_estimate"]
+                second_moment_estimate = state["second_moment_estimate"]
 
                 # define bias correction factors
                 bias_correction1 = 1 - beta1 ** step
                 bias_correction2 = 1 - beta2 ** step
 
                 # Decay the first and second moment running average coefficient
-                exp_avg.mul_(beta1).add_(grad, alpha=1 - beta1)
-                exp_avg_sq.mul_(beta2).addcmul_(grad, grad, value=1 - beta2)
+                first_moment_estimate.mul_(beta1).add_(grad, alpha=1 - beta1)
+                second_moment_estimate.mul_(beta2).addcmul_(grad, grad, value=1 - beta2)
 
                 # denominator in the fraction
-                denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(eps)
+                denom = (second_moment_estimate.sqrt() / math.sqrt(bias_correction2)).add_(eps)
 
                 # step size in adam update
                 alpha = step_size / bias_correction1
 
                 # update subgrad
-                sub_grad.addcdiv_(exp_avg, denom, value=-step_size)
+                sub_grad.addcdiv_(first_moment_estimate, denom, value=-alpha)
 
                 # update step for parameters
                 p.data = reg.prox(delta * sub_grad, delta)
@@ -87,7 +87,7 @@ class AdaBreg(torch.optim.Optimizer):
             # define regularizer for this group
             reg = group["reg"]
 
-            # evaluate the reguarizer for each parametr in group
+            # evaluate the reguarizer for each parameter in group
             for p in group["params"]:
                 group_reg_val += reg(p)
 

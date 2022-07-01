@@ -2,31 +2,26 @@ import torch
 
 
 class L1:
-    def __init__(self, lamda=1.0):
-        self.lamda = lamda
+    r"""This regularizer computes
+
+    .. math::
+        ||\theta||_{\ell^2} = \sum_{i}|\theta_i|
+
+    The associated proximal map is
+
+    .. math::
+        prox(\theta)_i = \sgn(\theta_i) min(0, |\theta_i|-\delta\lambda)
+
+    It is used to produce sparse vectors, e.g. biases or skip layers.
+    """
+    def __init__(self, rc=1.0):
+        self.rc = rc
 
     def __call__(self, x):
-        return self.lamda * torch.norm(x, p=1).item()
+        return self.rc * torch.norm(x, p=1).item()
 
     def prox(self, x, delta=1.0):
-        return torch.sign(x) * torch.clamp(torch.abs(x) - (delta * self.lamda), min=0)
+        return torch.sign(x) * torch.clamp(torch.abs(x) - (delta * self.rc), min=0)
 
     def sub_grad(self, v):
-        return self.lamda * torch.sign(v)
-
-
-class L1_pos:
-    def __init__(self, lamda=1.0):
-        self.lamda = lamda
-
-    def __call__(self, x):
-        return self.lamda * torch.norm(x, p=1).item()
-
-    def prox(self, x, delta=1.0):
-        return torch.clamp(
-            torch.sign(x) * torch.clamp(torch.abs(x) - (delta * self.lamda), min=0),
-            min=0,
-        )
-
-    def sub_grad(self, v):
-        return self.lamda * torch.sign(v)
+        return self.rc * torch.sign(v)
