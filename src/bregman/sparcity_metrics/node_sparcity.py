@@ -7,11 +7,11 @@ def node_sparsity(model, direction="row"):
     """
     assert direction in ["row", "column"]
     if direction == "row":
-        norm_dim = 1
-        size_dim = 0
-    else:
         norm_dim = 0
         size_dim = 1
+    else:
+        norm_dim = 1
+        size_dim = 0
     ret = []
     for m in model.modules():
         if isinstance(m, torch.nn.Linear):
