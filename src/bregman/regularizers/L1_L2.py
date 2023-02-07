@@ -18,6 +18,15 @@ class L1_L2:
     The associated proximal map is
 
     .. math::
+        prox_{\delta J}(v) = (prox_{\delta ||\theta_{1:}||_2}(v_1),...,prox_{\delta ||\theta_{n:}||_2}(v_n))
+
+    with
+
+    .. math::
+        prox_{\delta ||\theta_{i:}||_2}(v_i) = \begin{cases}
+            1-\frac{\delta}{||v_i||_2} & ||v_i||_2\geq \delta \\
+            0 & ||v_i||_2< \delta
+        \end{cases}
 
     It is used to produce row-sparse or column-sparse matrices.
     """
@@ -34,8 +43,7 @@ class L1_L2:
         return self.rc * math.sqrt(x.shape[-1]) * torch.norm(torch.norm(x, p=2, dim=self.dim), p=1).item()
 
     def prox(self, x, delta=1.0):
-        thresh = delta * self.rc
-        thresh *= math.sqrt(x.shape[-1])
+        thresh = delta * self.rc * math.sqrt(x.shape[-1])
 
         ret = torch.clone(x)
         nx = torch.norm(x, p=2, dim=self.dim).view(x.shape[0], 1)
@@ -47,7 +55,7 @@ class L1_L2:
 
     def sub_grad(self, x):
         thresh = self.rc * math.sqrt(x.shape[-1])
-        #
+
         nx = torch.norm(x, p=2, dim=self.dim).view(x.shape[0], 1)
         ind = torch.where((nx != 0))[0]
         ret = torch.clone(x)
