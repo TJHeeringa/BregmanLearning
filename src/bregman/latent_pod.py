@@ -18,8 +18,12 @@ def latent_pod(model: AutoEncoder, relative_error_tol=1e-6) -> AutoEncoder:
     :rtype: AutoEncoder
     """
     U, S, Vh = torch.linalg.svd(model.encoder[-1].weight, full_matrices=False)
-    relative_error = (torch.sum(S, dim=0) - torch.cumsum(S, dim=0)) / torch.sum(S, dim=0)
+    Sigma = S**2
+    relative_error = (torch.sum(Sigma, dim=0) - torch.cumsum(Sigma, dim=0)) / torch.sum(Sigma, dim=0)
     ldim: int = torch.count_nonzero(relative_error >= relative_error_tol).item() + 1
+
+    if ldim >= model.latent_size("full"):
+        return model
 
     new_encoder_layers = model.encoder_layers
     new_encoder_layers[-1] = ldim
