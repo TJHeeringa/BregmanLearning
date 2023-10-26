@@ -61,7 +61,6 @@ class LinBreg(torch.optim.Optimizer):
         reg_vals = []
         for group in self.param_groups:
             group_reg_val = 0.0
-            delta = group["delta"]
 
             # define regularizer for this group
             reg = group["reg"]

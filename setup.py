@@ -70,17 +70,8 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         'click',
-        'torch>=1.12.0@https://download.pytorch.org/whl/cu116',
+        # 'torch>=1.12.0@https://download.pytorch.org/whl/cu116',
+        'torch>=1.12.0',
         'numpy>=1.22.4'
     ],
-    extras_require={
-        # eg:
-        #   'rst': ['docutils>=0.11'],
-        #   ':python_version=="2.6"': ['argparse'],
-    },
-    entry_points={
-        'console_scripts': [
-            'bregman-learning = bregman.cli:main',
-        ]
-    },
 )
