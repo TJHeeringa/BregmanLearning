@@ -1,6 +1,6 @@
 import torch
 
-from bregman import sparsify, AutoEncoder, row_density, column_density
+from bregman import sparsify, AutoEncoder, row_density, column_density, simplify
 
 
 def test_row_density():
@@ -35,9 +35,30 @@ def test_latent_pod(run_count):
     pass
 
 
+@pytest.mark.parametrize('in_place', [True, False])
 @pytest.mark.parametrize('run_count', range(10))
-def test_simplify(run_count):
-    pass
+def test_simplify(run_count, in_place):
+    model = bregman.AutoEncoder(
+        encoder_layers=[11, 20, 300],
+        decoder_layers=[300, 20, 11]
+    )
+    bregman.sparsify(model, 0.2)
+
+    fom_size = model.fom_size
+    reduced_sizes = []
+    for parm in model.parameters():
+        if len(parm.data.shape) > 1:
+            reduced_sizes.append(torch.max(parm.data, dim=1).values.count_nonzero())
+    reduced_sizes = reduced_sizes[:-1]  # last layer shouldn't be reduced
+
+    if in_place:
+        simplify(model, in_place)
+    else:
+        model = simplify(model)
+
+    assert model.layers[1:-1] == reduced_sizes
+    assert model.layers[0] == fom_size
+    assert model.layers[-1] == fom_size
 
 
 @pytest.mark.parametrize('matrix_size', range(1, 10, 4))

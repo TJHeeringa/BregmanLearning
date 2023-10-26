@@ -1,3 +1,4 @@
+import copy
 import typing
 
 from simplify import simplify as EIDOSLAB_simplify
@@ -7,15 +8,15 @@ if typing.TYPE_CHECKING:
     from .models import AutoEncoder
 
 
-def simplify(model: "AutoEncoder") -> "AutoEncoder":
+def simplify(model: "AutoEncoder", in_place: bool = False) -> "AutoEncoder":
     def model_to_layers(model_) -> tuple[list[int], list[int]]:
         layers = []
         for weight_matrix in model_.parameters():
             layers.append(weight_matrix.shape)
 
         return (
-            [size[-1] for (i, size) in enumerate(layers) if len(size)>1 and i <= len(layers) / 2],
-            [size[-1] for (i, size) in enumerate(layers) if len(size)>1 and i >= len(layers) / 2] + [layers[0][-1]]
+            [size[-1] for (i, size) in enumerate(layers) if len(size) > 1 and i <= len(layers) / 2],
+            [size[-1] for (i, size) in enumerate(layers) if len(size) > 1 and i >= len(layers) / 2] + [layers[0][-1]]
         )
 
     def from_linear_expand_to_linear(module):
@@ -32,7 +33,12 @@ def simplify(model: "AutoEncoder") -> "AutoEncoder":
 
         return linear_layer
 
-    model = EIDOSLAB_simplify(model)
+    dummy_input = torch.ones([1, model.fom_size])
+    pinned_out = [name for name, module in model.named_modules()][-1:]
+    if in_place:
+        EIDOSLAB_simplify(model, dummy_input, pinned_out=pinned_out)
+    else:
+        model = EIDOSLAB_simplify(copy.deepcopy(model), dummy_input, pinned_out=pinned_out)
     model.decoder[-1] = from_linear_expand_to_linear(model.decoder[-1])
 
     encoder_layers, decoder_layers = model_to_layers(model)

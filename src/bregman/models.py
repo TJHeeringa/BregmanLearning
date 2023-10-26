@@ -52,6 +52,12 @@ class AutoEncoder(torch.nn.Module):
         """Return the full order dimension. This is simply the input size of the network."""
         return self.encoder_layers[0]
 
+    @property
+    def layers(self):
+        """Return all layers of the nn. This is the encoder and decoder layers stuck back to back, with the duplicate
+        center removed."""
+        return self.encoder_layers[:-1] + self.decoder_layers
+
     def latent_size(self, direction: str = "encoder spectral", tol=0.0) -> int:
         """Computes the latent dimension based on the `direction` option.
 
