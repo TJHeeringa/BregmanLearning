@@ -84,7 +84,7 @@ class AutoEncoder(torch.nn.Module):
                 S = torch.linalg.svdvals(self.encoder[-1].weight)
                 Sigma = S ** 2
                 relative_error = (torch.sum(Sigma, dim=0) - torch.cumsum(Sigma, dim=0)) / torch.sum(Sigma, dim=0)
-                return torch.count_nonzero(relative_error >= tol).item() + 1
+                return min(torch.count_nonzero(relative_error >= tol).item() + 1, self.encoder_layers[-1])
             case _:
                 raise ValueError("Invalid direction chosen")
 
