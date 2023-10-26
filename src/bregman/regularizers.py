@@ -12,7 +12,7 @@ class BaseRegularizer(ABC):
         pass
 
     @abstractmethod
-    def prox(self, x):
+    def prox(self, x, delta=1.0):
         pass
 
     @abstractmethod
@@ -29,7 +29,7 @@ class Null(BaseRegularizer):
     def __call__(self, x):
         return 0
 
-    def prox(self, x):
+    def prox(self, x, delta=1.0):
         return x
 
     def sub_grad(self, v):
