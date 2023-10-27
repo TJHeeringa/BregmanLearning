@@ -71,12 +71,14 @@ class AutoEncoder(torch.nn.Module):
                 )
             case "decoder spectral":
                 return torch.count_nonzero(torch.linalg.svdvals(self.decoder[0].weight))
-            case "decoder row":
-                return torch.count_nonzero(self.decoder[0].weight.abs().sum(dim=0))
             case "encoder column":
-                return torch.count_nonzero(self.encoder[-1].weight.abs().sum(dim=1))
-            case "encoder row":
                 return torch.count_nonzero(self.encoder[-1].weight.abs().sum(dim=0))
+            case "decoder column":
+                return torch.count_nonzero(self.decoder[0].weight.abs().sum(dim=0))
+            case "encoder row":
+                return torch.count_nonzero(self.encoder[-1].weight.abs().sum(dim=1))
+            case "decoder row":
+                return torch.count_nonzero(self.decoder[0].weight.abs().sum(dim=1))
             case "full":
                 return self.encoder_layers[-1]
             case "latent POD":
@@ -84,6 +86,15 @@ class AutoEncoder(torch.nn.Module):
                 Sigma = S ** 2
                 relative_error = (torch.sum(Sigma, dim=0) - torch.cumsum(Sigma, dim=0)) / torch.sum(Sigma, dim=0)
                 return min(torch.count_nonzero(relative_error >= tol).item() + 1, self.encoder_layers[-1])
+            case "minimal":
+                return min(
+                    self.latent_size("encoder spectral"),
+                    self.latent_size("decoder spectral"),
+                    self.latent_size("encoder row"),
+                    self.latent_size("decoder row"),
+                    self.latent_size("encoder column"),
+                    self.latent_size("decoder column"),
+                )
             case _:
                 raise ValueError("Invalid direction chosen")
 
