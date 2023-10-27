@@ -9,10 +9,9 @@ class AutoEncoder(torch.nn.Module):
         decoder_layers: list[int]
     ):
         super().__init__()
-        # latent dimension must match
-        assert encoder_layers[-1] == decoder_layers[0]
-        # full order dimension must match
-        assert encoder_layers[0] == decoder_layers[-1]
+
+        assert encoder_layers[-1] == decoder_layers[0], "latent dimensions must match"
+        assert encoder_layers[0] == decoder_layers[-1], "full order dimensions must match"
 
         self.encoder_layers = encoder_layers
         self.decoder_layers = decoder_layers

@@ -25,10 +25,10 @@ def latent_pod(model: AutoEncoder, relative_error_tol=1e-6) -> AutoEncoder:
     if ldim >= model.latent_size("full"):
         return model
 
-    new_encoder_layers = model.encoder_layers
+    new_encoder_layers = [*model.encoder_layers]
     new_encoder_layers[-1] = ldim
 
-    new_decoder_layers = model.decoder_layers
+    new_decoder_layers = [*model.decoder_layers]
     new_decoder_layers[0] = ldim
 
     pod_model = AutoEncoder(
