@@ -12,13 +12,21 @@ def sparsify(model: torch.nn.Module, density_level: float):
         \#(\text{nonzero rows}) / \#\text{rows} = \lceil \#\text{rows} * \text{density\_level} \rceil.
 
     """
+    weight_matrix_counter = 0
     for m in model.modules():
         if isinstance(m, torch.nn.Linear):
+            weight_matrix_counter += 1
             w = m.weight.data
-
-            # get number of rows that need to be zeroed
             num_rows, num_cols = w.shape
-            zero_row_count = math.floor(num_rows * (1-density_level))
+
+            if weight_matrix_counter == len(model.encoder_layers) - 1:
+                U, S, Vh = torch.linalg.svd(w, full_matrices=False)
+                init_weights = torch.zeros((num_rows,))
+                init_weights[0] = 1
+                m.weight.data = init_weights * U @ Vh
+                continue
+
+            zero_row_count = math.floor(num_rows * (1 - density_level))
 
             if zero_row_count > 0:
                 # create indices for the rows that will be zeroed
