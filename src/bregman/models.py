@@ -138,34 +138,39 @@ class AutoEncoder(torch.nn.Module):
 
         """
         num_vertices = 0
+        layer_count = 0
         edges = []
         layout = []
 
         max_matrix_index = len(self.encoder_layers) + len(self.decoder_layers) - 3
         max_width = max(max(self.encoder_layers), max(self.encoder_layers))
-        for i, weight_matrix in enumerate(get_weights_linear(self)):
-            in_start = num_vertices
-            in_end = out_start = num_vertices + weight_matrix.shape[1]
-            out_end = out_start + weight_matrix.shape[0]
 
-            input_vertices = range(in_start, in_end)
-            output_vertices = range(out_start, out_end)
+        for m in self.modules():
+            if isinstance(m, torch.nn.Linear):
+                weight_matrix = m.weight
+                in_start = num_vertices
+                in_end = out_start = num_vertices + weight_matrix.shape[1]
+                out_end = out_start + weight_matrix.shape[0]
 
-            for in_ in input_vertices:
-                for out in output_vertices:
-                    if abs(weight_matrix[out - out_start, in_ - in_start]) > 0:
-                        edges.append([in_, out])
+                input_vertices = range(in_start, in_end)
+                output_vertices = range(out_start, out_end)
 
-            input_top_offset = (max_width - weight_matrix.shape[1]) / 2
+                for in_ in input_vertices:
+                    for out in output_vertices:
+                        if abs(weight_matrix[out - out_start, in_ - in_start]) > 0:
+                            edges.append([in_, out])
 
-            layout.extend([[i, in_ - in_start + input_top_offset] for in_ in input_vertices])
+                input_top_offset = (max_width - weight_matrix.shape[1]) / 2
 
-            num_vertices += weight_matrix.shape[1]
+                layout.extend([[layer_count, in_ - in_start + input_top_offset] for in_ in input_vertices])
 
-            if i == max_matrix_index:
-                num_vertices += weight_matrix.shape[0]
-                output_top_offset = (max_width - weight_matrix.shape[0]) / 2
-                layout.extend([[i + 1, out - out_start + output_top_offset] for out in output_vertices])
+                num_vertices += weight_matrix.shape[1]
+
+                if layer_count == max_matrix_index:
+                    num_vertices += weight_matrix.shape[0]
+                    output_top_offset = (max_width - weight_matrix.shape[0]) / 2
+                    layout.extend([[layer_count + 1, out - out_start + output_top_offset] for out in output_vertices])
+                layer_count += 1
 
         graph = igraph.Graph(n=num_vertices, edges=edges, directed=True)
 
