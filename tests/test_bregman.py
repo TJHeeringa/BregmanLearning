@@ -1,3 +1,4 @@
+import pytest
 import torch
 
 from bregman import sparsify, AutoEncoder, row_density, column_density, simplify
@@ -38,7 +39,7 @@ def test_latent_pod(run_count):
 @pytest.mark.parametrize('in_place', [True, False])
 @pytest.mark.parametrize('run_count', range(10))
 def test_simplify(run_count, in_place):
-    model = bregman.AutoEncoder(
+    model = AutoEncoder(
         encoder_layers=[11, 20, 300],
         decoder_layers=[300, 20, 11]
     )
