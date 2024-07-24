@@ -71,7 +71,7 @@ setup(
         'click',
         # 'torch>=1.12.0@https://download.pytorch.org/whl/cu116',
         'torch>=1.12.0',
-        'numpy==1.26; platform_system="Windows"',
+        'numpy==1.26; platform_system=="Windows"',
         'numpy>=1.22.4',
         'igraph',
         'torch-simplify'
