@@ -76,5 +76,5 @@ def test_sparsify(matrix_size, density_level, run_count):
         if isinstance(m, torch.nn.Linear):
             w = m.weight.data
             zero_rows += (w.norm(dim=1) == 0).sum().item()
-    expected_zero_rows = torch.ceil(density_level * matrix_size)
-    assert zero_rows == expected_zero_rows
+    expected_zero_rows = torch.floor((1-density_level) * matrix_size)
+    assert zero_rows == expected_zero_rows.int()
