@@ -35,7 +35,7 @@ def row_density(model: torch.nn.Module, absolute: bool = False):
             a = m.weight
 
             num_nonzero_rows = torch.count_nonzero(torch.norm(a.data, p=2, dim=0)).item()
-            num_rows = a.shape[1]
+            num_rows = a.shape[0]
 
             if absolute:
                 metric_per_row.append(num_nonzero_rows)
@@ -58,7 +58,7 @@ def column_density(model: torch.nn.Module, absolute: bool = False):
             a = m.weight
 
             num_nonzero_cols = torch.count_nonzero(torch.norm(a.data, p=2, dim=1)).item()
-            num_cols = a.shape[0]
+            num_cols = a.shape[1]
 
             if absolute:
                 metric_per_col.append(num_nonzero_cols)
