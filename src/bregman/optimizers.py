@@ -1,5 +1,7 @@
-import torch
 import math
+
+import torch
+
 from bregman import regularizers
 
 

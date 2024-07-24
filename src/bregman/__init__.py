@@ -1,10 +1,10 @@
 __version__ = '0.0.0'
 
+from .densities import column_density, network_density, row_density
 from .latent_pod import latent_pod
 from .models import AutoEncoder
-from .densities import network_density, row_density, column_density
 from .optimizers import AdaBreg, LinBreg
-from .regularizers import Null, L1, L11, L12, Nuclear, SoftBernoulli
+from .regularizers import L1, L11, L12, Nuclear, Null, SoftBernoulli
 from .simplify import simplify
 from .sparsify import sparsify
 
