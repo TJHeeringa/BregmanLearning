@@ -1,7 +1,6 @@
 import copy
 import typing
 
-from simplify import simplify as EIDOSLAB_simplify
 import torch
 
 if typing.TYPE_CHECKING:
@@ -9,7 +8,10 @@ if typing.TYPE_CHECKING:
 
 __all__ = ["simplify"]
 
+
 def simplify(model: "AutoEncoder", in_place: bool = False) -> "AutoEncoder":
+    from simplify import simplify as EIDOSLAB_simplify
+
     def model_to_layers(model_) -> tuple[list[int], list[int]]:
         layers = []
         for weight_matrix in model_.parameters():
