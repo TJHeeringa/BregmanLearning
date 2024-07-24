@@ -43,7 +43,7 @@ def test_simplify(run_count, in_place):
         encoder_layers=[11, 20, 300],
         decoder_layers=[300, 20, 11]
     )
-    bregman.sparsify(model, 0.2)
+    sparsify(model, 0.2)
 
     fom_size = model.fom_size
     reduced_sizes = []
