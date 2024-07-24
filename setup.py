@@ -72,6 +72,7 @@ setup(
         # 'torch>=1.12.0@https://download.pytorch.org/whl/cu116',
         'torch>=1.12.0',
         'numpy>=1.22.4',
-        'igraph'
+        'igraph',
+        'torch-simplify'
     ],
 )
