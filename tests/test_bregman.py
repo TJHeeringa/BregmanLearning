@@ -38,10 +38,11 @@ def test_latent_pod(run_count):
 
 @pytest.mark.parametrize('in_place', [True, False])
 @pytest.mark.parametrize('run_count', range(10))
-def test_simplify(run_count, in_place):
+@pytest.mark.parametrize('latent', [10, 100])
+def test_simplify(run_count, in_place, latent):
     model = AutoEncoder(
-        encoder_layers=[11, 20, 300],
-        decoder_layers=[300, 20, 11]
+        encoder_layers=[11, 20, latent],
+        decoder_layers=[latent, 20, 11]
     )
     sparsify(model, 0.2)
 

@@ -21,8 +21,8 @@ def sparsify(model: torch.nn.Module, density_level: float, spectral_sparsity: bo
 
             if spectral_sparsity:
                 if weight_matrix_counter == len(model.encoder_layers) - 1:
-                    U, S, Vh = torch.linalg.svd(w, full_matrices=False)
-                    init_weights = torch.zeros((num_rows,))
+                    U, _, Vh = torch.linalg.svd(w, full_matrices=False)
+                    init_weights = torch.zeros((min(num_rows, num_cols),))
                     init_weights[0] = 1
                     m.weight.data = init_weights * U @ Vh
                     continue
