@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from bregman import sparsify, AutoEncoder, row_density, column_density, simplify
+from bregman import AutoEncoder, column_density, row_density, simplify, sparsify
 
 
 def test_row_density():
