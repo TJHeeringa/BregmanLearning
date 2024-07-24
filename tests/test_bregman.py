@@ -9,7 +9,7 @@ def test_row_density():
         torch.nn.Linear(4, 3)
     )
     model[0].weight.data = torch.tensor([
-        [0, 0, 0],
+        [0., 0., 0.],
         [1, 4, 5],
         [2, 7, 8],
         [3, 6, 9]
@@ -23,9 +23,9 @@ def test_column_density():
         torch.nn.Linear(3, 4)
     )
     model[0].weight.data = torch.tensor([
-        [0, 1, 2, 3],
-        [0, 4, 5, 6],
-        [0, 7, 8, 9],
+        [0., 1, 2, 3],
+        [0., 4, 5, 6],
+        [0., 7, 8, 9],
     ])
     assert column_density(model=model, absolute=False) == 0.75
     assert column_density(model=model, absolute=True) == 3
@@ -69,7 +69,7 @@ def test_sparsify(matrix_size, density_level, run_count):
     model = torch.nn.Sequential(
         torch.nn.Linear(matrix_size, matrix_size)
     )
-    sparsify(model, density_level)
+    sparsify(model, density_level, spectral_sparsity=False)
 
     zero_rows = 0
     for m in model.modules():

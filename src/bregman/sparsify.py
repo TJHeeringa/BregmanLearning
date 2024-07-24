@@ -4,7 +4,7 @@ import torch
 
 
 @torch.no_grad()
-def sparsify(model: torch.nn.Module, density_level: float):
+def sparsify(model: torch.nn.Module, density_level: float, spectral_sparsity: bool = True):
     r"""Takes all the torch.nn.Linear Modules and sets rows of the weight matrices to zero based on a Bernoulli
     random variable such that in the end
 
@@ -19,12 +19,13 @@ def sparsify(model: torch.nn.Module, density_level: float):
             w = m.weight.data
             num_rows, num_cols = w.shape
 
-            if weight_matrix_counter == len(model.encoder_layers) - 1:
-                U, S, Vh = torch.linalg.svd(w, full_matrices=False)
-                init_weights = torch.zeros((num_rows,))
-                init_weights[0] = 1
-                m.weight.data = init_weights * U @ Vh
-                continue
+            if spectral_sparsity:
+                if weight_matrix_counter == len(model.encoder_layers) - 1:
+                    U, S, Vh = torch.linalg.svd(w, full_matrices=False)
+                    init_weights = torch.zeros((num_rows,))
+                    init_weights[0] = 1
+                    m.weight.data = init_weights * U @ Vh
+                    continue
 
             zero_row_count = math.floor(num_rows * (1 - density_level))
 
