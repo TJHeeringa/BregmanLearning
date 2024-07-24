@@ -27,8 +27,8 @@ def test_column_density():
         [0., 4, 5, 6],
         [0., 7, 8, 9],
     ])
-    assert column_density(model=model, absolute=False) == 0.75
-    assert column_density(model=model, absolute=True) == 3
+    assert column_density(model=model, absolute=False)[0] == 0.75
+    assert column_density(model=model, absolute=True)[0] == 3
 
 
 @pytest.mark.parametrize('run_count', range(10))

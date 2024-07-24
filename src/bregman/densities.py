@@ -41,6 +41,7 @@ def row_density(model: torch.nn.Module, absolute: bool = False):
                 metric_per_row.append(num_nonzero_rows)
             else:
                 metric_per_row.append(num_nonzero_rows / num_rows)
+    return metric_per_row
 
 
 def column_density(model: torch.nn.Module, absolute: bool = False):
@@ -63,3 +64,5 @@ def column_density(model: torch.nn.Module, absolute: bool = False):
                 metric_per_col.append(num_nonzero_cols)
             else:
                 metric_per_col.append(num_nonzero_cols / num_cols)
+    return metric_per_col
+
