@@ -37,8 +37,8 @@ def latent_pod(model: AutoEncoder, relative_error_tol=1e-6) -> AutoEncoder:
         decoder_layers=new_decoder_layers,
     )
 
-    for i in range(len(new_encoder_layers)-2):
-        k = 2*i
+    for i in range(len(new_encoder_layers) - 2):
+        k = 2 * i
         pod_model.encoder[k].weight.data = model.encoder[k].weight.data
         pod_model.encoder[k].bias.data = model.encoder[k].bias.data
 
@@ -47,8 +47,8 @@ def latent_pod(model: AutoEncoder, relative_error_tol=1e-6) -> AutoEncoder:
     pod_model.decoder[0].weight.data = model.decoder[0].weight.data @ U[:, :ldim]
     pod_model.decoder[0].bias.data = model.decoder[0].bias.data + model.decoder[0].weight @ model.encoder[-1].bias.data
 
-    for i in range(len(new_decoder_layers)-2):
-        k = 2*i+2
+    for i in range(len(new_decoder_layers) - 2):
+        k = 2 * i + 2
         pod_model.decoder[k].weight.data = model.decoder[k].weight.data
         pod_model.decoder[k].bias.data = model.decoder[k].bias.data
 

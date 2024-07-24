@@ -3,11 +3,7 @@ import torch
 
 
 class AutoEncoder(torch.nn.Module):
-    def __init__(
-        self,
-        encoder_layers: list[int],
-        decoder_layers: list[int]
-    ):
+    def __init__(self, encoder_layers: list[int], decoder_layers: list[int]):
         super().__init__()
 
         assert encoder_layers[-1] == decoder_layers[0], "latent dimensions must match"
@@ -20,13 +16,9 @@ class AutoEncoder(torch.nn.Module):
         num_of_relu_needed = len(encoder_layers) - 2
         shifted_encoder_layers = encoder_layers[1:] + encoder_layers[:1]
         layers = []
-        for k, (current_width, next_width) in enumerate(
-            zip(encoder_layers, shifted_encoder_layers)
-        ):
+        for k, (current_width, next_width) in enumerate(zip(encoder_layers, shifted_encoder_layers)):
             if k <= num_of_relu_needed - 1:
-                layers.extend(
-                    [torch.nn.Linear(current_width, next_width), torch.nn.ReLU()]
-                )
+                layers.extend([torch.nn.Linear(current_width, next_width), torch.nn.ReLU()])
             elif k <= num_of_relu_needed:
                 layers.append(torch.nn.Linear(current_width, next_width))
         self.encoder = torch.nn.Sequential(*layers)
@@ -35,13 +27,9 @@ class AutoEncoder(torch.nn.Module):
         num_of_relu_needed = len(decoder_layers) - 2
         shifted_decoder_layers = decoder_layers[1:] + decoder_layers[:1]
         layers = []
-        for k, (current_width, next_width) in enumerate(
-            zip(decoder_layers, shifted_decoder_layers)
-        ):
+        for k, (current_width, next_width) in enumerate(zip(decoder_layers, shifted_decoder_layers)):
             if k <= num_of_relu_needed - 1:
-                layers.extend(
-                    [torch.nn.Linear(current_width, next_width), torch.nn.ReLU()]
-                )
+                layers.extend([torch.nn.Linear(current_width, next_width), torch.nn.ReLU()])
             elif k <= num_of_relu_needed:
                 layers.append(torch.nn.Linear(current_width, next_width))
         self.decoder = torch.nn.Sequential(*layers)
@@ -66,9 +54,7 @@ class AutoEncoder(torch.nn.Module):
         """
         match direction:
             case "encoder spectral":
-                return torch.count_nonzero(
-                    torch.linalg.svdvals(self.encoder[-1].weight)
-                )
+                return torch.count_nonzero(torch.linalg.svdvals(self.encoder[-1].weight))
             case "decoder spectral":
                 return torch.count_nonzero(torch.linalg.svdvals(self.decoder[0].weight))
             case "encoder column":
@@ -83,7 +69,7 @@ class AutoEncoder(torch.nn.Module):
                 return self.encoder_layers[-1]
             case "latent POD":
                 S = torch.linalg.svdvals(self.encoder[-1].weight)
-                Sigma = S ** 2
+                Sigma = S**2
                 relative_error = (torch.sum(Sigma, dim=0) - torch.cumsum(Sigma, dim=0)) / torch.sum(Sigma, dim=0)
                 return min(torch.count_nonzero(relative_error >= tol).item() + 1, self.encoder_layers[-1])
             case "minimal":
@@ -114,6 +100,7 @@ class AutoEncoder(torch.nn.Module):
         Returns:
             List with colour, where the first element corresponds to the first vertex etc.
         """
+
         def color_vertex(index: int, vertex_: igraph.Vertex):
             if index < self.encoder_layers[0]:
                 return "blue"
@@ -178,6 +165,6 @@ class AutoEncoder(torch.nn.Module):
             "vertex_size": 10,
             "edge_arrow_size": 0.1,
             "vertex_color": self._color_vertices(graph.vs),
-            "edge_color": "#778899"
+            "edge_color": "#778899",
         }
         return igraph.plot(graph, save_to, layout=layout, **visual_style)

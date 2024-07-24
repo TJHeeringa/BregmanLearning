@@ -19,7 +19,7 @@ def simplify(model: "AutoEncoder", in_place: bool = False) -> "AutoEncoder":
 
         return (
             [size[-1] for (i, size) in enumerate(layers) if len(size) > 1 and i <= len(layers) / 2],
-            [size[-1] for (i, size) in enumerate(layers) if len(size) > 1 and i >= len(layers) / 2] + [layers[0][-1]]
+            [size[-1] for (i, size) in enumerate(layers) if len(size) > 1 and i >= len(layers) / 2] + [layers[0][-1]],
         )
 
     def from_linear_expand_to_linear(module):

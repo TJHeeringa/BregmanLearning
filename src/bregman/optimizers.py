@@ -54,8 +54,8 @@ class AdaBreg(torch.optim.Optimizer):
                 second_moment_estimate = state["second_moment_estimate"]
 
                 # define bias correction factors
-                bias_correction1 = 1 - beta1 ** step
-                bias_correction2 = 1 - beta2 ** step
+                bias_correction1 = 1 - beta1**step
+                bias_correction2 = 1 - beta2**step
 
                 # Decay the first and second moment running average coefficient
                 first_moment_estimate.mul_(beta1).add_(grad, alpha=1 - beta1)

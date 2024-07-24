@@ -5,8 +5,8 @@ import torch
 
 
 class BaseRegularizer(ABC):
-    r"""Bregman requires regularizers of a specific form. This specifies which methods need to be implemented.
-    """
+    r"""Bregman requires regularizers of a specific form. This specifies which methods need to be implemented."""
+
     @abstractmethod
     def __call__(self, x):
         pass
@@ -26,6 +26,7 @@ class Null(BaseRegularizer):
     The optimizers in this package are written such that they require a regularizer. This class is made to effectively
     have no regularization in the optimization procedure, when used.
     """
+
     def __call__(self, x):
         return 0
 
@@ -49,6 +50,7 @@ class L1(BaseRegularizer):
 
     It is used to produce sparse vectors for e.g. biases or skip layers.
     """
+
     def __init__(self, rc=1.0):
         self.rc = rc
 
@@ -168,6 +170,7 @@ class Nuclear(BaseRegularizer):
 
     where $\theta= U \Sigma V^T$ is the SVD of $\theta$ and $\sigma_i=\Sigma_ii$.
     """
+
     def __init__(self, rc=1.0):
         self.rc = rc
 
