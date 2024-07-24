@@ -7,6 +7,7 @@ import torch
 if typing.TYPE_CHECKING:
     from .models import AutoEncoder
 
+__all__ = ["simplify"]
 
 def simplify(model: "AutoEncoder", in_place: bool = False) -> "AutoEncoder":
     def model_to_layers(model_) -> tuple[list[int], list[int]]:

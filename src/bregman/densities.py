@@ -65,4 +65,3 @@ def column_density(model: torch.nn.Module, absolute: bool = False):
             else:
                 metric_per_col.append(num_nonzero_cols / num_cols)
     return metric_per_col
-
