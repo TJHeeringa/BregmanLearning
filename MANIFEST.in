@@ -17,6 +17,7 @@ include AUTHORS.rst
 include CHANGELOG.rst
 include CONTRIBUTING.rst
 include LICENSE
+include CITATION.cff
 include README.rst
 
 global-exclude *.py[cod] __pycache__/* *.so *.dylib
