@@ -14,8 +14,8 @@ def test_row_density():
         [2, 7, 8],
         [3, 6, 9]
     ])
-    assert row_density(model=model, absolute=False) == 0.75
-    assert row_density(model=model, absolute=True) == 3
+    assert row_density(model=model, absolute=False)[0] == 0.75
+    assert row_density(model=model, absolute=True)[0] == 3
 
 
 def test_column_density():
