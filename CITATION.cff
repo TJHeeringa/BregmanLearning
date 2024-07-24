@@ -1,0 +1,51 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Sparse Bregman Learning
+message: >-
+  If you use this software, please cite both the article from preferred-citation and the software itself.
+type: software
+authors:
+  - given-names: Tjeerd Jan
+    family-names: Heeringa
+    email: t.j.heeringa@utwente.nl
+    affiliation: University of Twente
+    orcid: 'https://orcid.org/0000-0001-9706-4518'
+repository-code: 'https://github.com/TJHeeringa/bregman-learning'
+abstract: >-
+  A set of optimizers and regularizers to find a sparse
+  latent representation of your data.
+keywords:
+  - Bregman
+  - Machine learning
+license: CC-BY-SA-4.0
+preferred-citation:
+    title: "Sparsifying dimensionality reduction of PDE solution data with Bregman learning"
+    authors:
+      - given-names: Tjeerd Jan
+        family-names: Heeringa
+      - given-names: Christoph
+        family-names: Brune
+      - given-names: Mengwu
+        family-names: Guo
+    type: article
+references:
+    - title: "Simplify: A Python library for optimizing pruned neural networks"
+      authors:
+        - given-names: Andrea
+          family-names: Bragagnolo
+        - given-names: Carlo Alberto
+          family-names: Barbano
+      type: article
+    - title: "A Bregman Learning Framework for Sparse Neural Networks"
+      authors:
+        - given-names: Leon
+          family-names: Bungert
+        - given-names: Tim
+          family-names: Roith
+        - given-names: Daniel
+          family-names: Tenbrinck
+        - given-names: Martin
+          family-names: Burger
+      type: article
