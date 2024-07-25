@@ -7,8 +7,6 @@ Overview
 .. list-table::
     :stub-columns: 1
 
-    * - docs
-      - |docs|
     * - tests
       - | |github-actions| |requires|
         | |codecov|
@@ -55,7 +53,7 @@ Overview
 
 .. end-badges
 
-A pytorch extension providing the Bregman optimizers
+A pytorch extension providing Bregman-based optimizers
 
 * Free software: BSD 3-Clause License
 
@@ -64,40 +62,55 @@ Installation
 
 ::
 
+The package can be install from PyPI using::
+
     pip install bregman-learning
 
-You can also install the in-development version with::
 
-    pip install https://github.com/TJHeeringa/bregman-learning/archive/main.zip
+Usage
+============
+
+The library provides 2 Bregman-based optimizers, several regularizers for these optimizers, and functions for pre- and postprocessing the networks.
+
+The Bregman-based optimizers provides are LinBreg and AdaBreg. Their usage is similar to the usage of Adam and SGD, their non-Bregman counterparts. Instead of::
+
+    from torch.optim import Adam
+
+    ...
+
+    optimizer = Adam(model.parameters(), lr=learning_rate)
+
+the optimizers are created using::
+
+    from bregman import AdaBreg, L1
+
+    ...
+
+    optimizer = AdaBreg(
+        model.parameters(),
+        reg=L1(rc=regularization_constant),
+        lr=learning_rate
+    )
+
+where the L1 regularizer can be interchanged with any regularizer in the library.
+
+For the best results when using sparsity-promoting regularizers, the networks have to pre- and postprocessed accordingly. For the L12 regularizer, this can be done using::
+
+    from bregman import sparsify
+
+    ...
+
+    sparsify(model, density_level=0.2)
+
+and::
+
+   from bregman import simplify
+
+   ...
+
+   pruned_model = simplify(model)
 
 
-Documentation
-=============
-
-
-https://bregman-learning.readthedocs.io/
-
-
-Development
-===========
-
-To run all the tests run::
-
-    tox
-
-Note, to combine the coverage data from all the tox environments run:
-
-.. list-table::
-    :widths: 10 90
-    :stub-columns: 1
-
-    - - Windows
-      - ::
-
-            set PYTEST_ADDOPTS=--cov-append
-            tox
-
-    - - Other
-      - ::
-
-            PYTEST_ADDOPTS=--cov-append tox
+Citing
+============
+If you use this code, please use the citation information in the CITATION.cff file or click the `cite this repository` button in the sitebar.

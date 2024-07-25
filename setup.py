@@ -48,10 +48,6 @@ setup(
         'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
-        # uncomment if you test on these interpreters:
-        # 'Programming Language :: Python :: Implementation :: IronPython',
-        # 'Programming Language :: Python :: Implementation :: Jython',
-        # 'Programming Language :: Python :: Implementation :: Stackless',
         'Topic :: Utilities',
     ],
     project_urls={
@@ -64,8 +60,6 @@ setup(
     ],
     python_requires='>=3.10',
     install_requires=[
-        'click',
-        # 'torch>=1.12.0@https://download.pytorch.org/whl/cu116',
         'torch>=1.12.0',
         'numpy==1.26; platform_system=="Windows"',
         'numpy>=1.22.4',
