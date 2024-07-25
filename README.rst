@@ -60,8 +60,6 @@ A pytorch extension providing Bregman-based optimizers
 Installation
 ============
 
-::
-
 The package can be install from PyPI using::
 
     pip install bregman-learning
