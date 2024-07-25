@@ -1,7 +1,27 @@
 import pytest
 import torch
 
-from bregman import AutoEncoder, column_density, row_density, simplify, sparsify
+from bregman import AutoEncoder, AdaBreg, column_density, LinBreg, row_density, simplify, sparsify, L1
+
+
+def test_linbreg():
+    model = torch.nn.Sequential(
+        torch.nn.Linear(2, 10),
+        torch.nn.ReLU(),
+        torch.nn.Linear(10, 1),
+    )
+    optimizer = LinBreg(model.parameters(), lr=0.1, reg=L1(rc=1))
+    loss_functional = torch.nn.MSELoss()
+
+    input = torch.randn(4, 2)
+    labels = torch.randn(4, 1)
+
+    optimizer.zero_grad()
+
+    loss = loss_functional(labels, model(input))
+
+    loss.backward()
+    optimizer.step()
 
 
 def test_row_density():
