@@ -13,10 +13,6 @@ Overview
     * - package
       - | |version| |wheel| |supported-versions| |supported-implementations|
         | |commits-since|
-.. |docs| image:: https://readthedocs.org/projects/bregman-learning/badge/?style=flat
-    :target: https://bregman-learning.readthedocs.io/
-    :alt: Documentation Status
-
 .. |github-actions| image:: https://github.com/TJHeeringa/bregman-learning/actions/workflows/github-actions.yml/badge.svg
     :alt: GitHub Actions Build Status
     :target: https://github.com/TJHeeringa/bregman-learning/actions
@@ -94,19 +90,15 @@ where the L1 regularizer can be interchanged with any regularizer in the library
 
 For the best results when using sparsity-promoting regularizers, the networks have to pre- and postprocessed accordingly. For the L12 regularizer, this can be done using::
 
-    from bregman import sparsify
+    from bregman import simplify, sparsify
 
     ...
 
     sparsify(model, density_level=0.2)
 
-and::
+    ...
 
-   from bregman import simplify
-
-   ...
-
-   pruned_model = simplify(model)
+    pruned_model = simplify(model)
 
 
 Citing
